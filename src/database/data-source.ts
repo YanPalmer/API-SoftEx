@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { User } from "../entities/user";
 
 export const appDataSource = new DataSource({
     type: "postgres",
@@ -8,6 +9,12 @@ export const appDataSource = new DataSource({
     username: "postgres",
     password: "root",
     database: "api-softex",
+    // Seleciona a entidade especificada
+    entities: [User],
+    // Sincroniza com o banco de dados
+    synchronize: true
+    // Ou
+    // entities: ["src/entities/*.ts"]
 })
 
 // export const startDatabase = async () => {
