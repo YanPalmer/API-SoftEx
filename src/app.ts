@@ -1,6 +1,6 @@
 // import { Request, Response } from "express";
 
-import { cadastrarUsuario } from "./controlers/user";
+import { atualizarUsuario, cadastrarUsuario, deletarUsuario, listarUsuarios } from "./controlers/user";
 
 const express = require("express");
 const app = express();
@@ -16,7 +16,7 @@ app.get("/teste", lidarComRequisicao);
 
 // Rotas
 app.post("/users", cadastrarUsuario);
-app.get("/users");
-app.put("/users");
-app.delete("/users");
+app.get("/users", listarUsuarios);
+app.patch("/users/:user_id", atualizarUsuario);
+app.delete("/users/:user_id", deletarUsuario);
 export default app;
