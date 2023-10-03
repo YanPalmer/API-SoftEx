@@ -2,7 +2,10 @@ import "reflect-metadata";
 import { appDataSource } from "./database/data-source";
 import app from "./app";
 
-console.log("Hello world");
+console.log("Aplicativo iniciando...");
+setTimeout(() => {
+    main();
+}, 2000);
 
 const main = async () => {
     try {
@@ -16,9 +19,7 @@ const main = async () => {
         })
     } catch (error) {
         console.log(error);
-        console.log("Erro na area2")
+        console.log("Erro na ao iniciar banco")
     }
 
 }
-
-main();
