@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../entities/user";
+import { User } from "../entitiesOUmodels/user";
 import { appDataSource } from "../database/data-source";
 
 
