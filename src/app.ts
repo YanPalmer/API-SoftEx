@@ -23,7 +23,8 @@ app.patch("/users/:user_id", atualizarUsuario);
 app.delete("/users/:user_id", deletarUsuario);
 
 // Rotas produto
-app.post("/products/:title/:price/:color/:size", ProductController.createProduct);
-app.get("/products", ProductController.listProducts);
+app.post("/product", ProductController.createProduct);
+app.get("/product", ProductController.listProducts);
+app.delete("/product/:product_id", ProductController.deleteProduct);
 
 export default app;
