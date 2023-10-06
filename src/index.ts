@@ -5,7 +5,7 @@ import app from "./app";
 console.log("Aplicativo iniciando...");
 setTimeout(() => {
     main();
-}, 2000);
+}, 1000);
 
 const main = async () => {
     try {
