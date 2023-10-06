@@ -5,41 +5,46 @@ import { appDataSource } from "../database/data-source";
 // Cria produtos
 class ProductController {
     async createProduct(req: Request, res: Response) {
-        const { title, price, color, size } = req.body; {
-            // console.log(title, price, color, size);
-            /*
-            DESESTRUTURAÇÃO typescript
-            const title = req.body.title
-            const price = req.body.price
-            const color = req.body.color
-            const size = req.body.size
-            */
+        const { title, price, color, size } = req.body;
+        // console.log(title, price, color, size);
+        /*
+        DESESTRUTURAÇÃO typescript
+        const title = req.body.title
+        const price = req.body.price
+        const color = req.body.color
+        const size = req.body.size
+        */
 
-            if (!title) {
-                res.status(500).json({ message: "O campo title é obrigatório!" });
+        function verificarCampoObrigatorio(campo: any, nomeCampo: string,) {
+            if (!campo) {
+                res.status(500).json({message: `O campo ${nomeCampo} é obrigatório!`});
+                return false;
             }
-            if (!price) {
-                res.status(500).json({ message: "O campo price é obrigatório!" });
-            }
-            if (!color) {
-                res.status(500).json({ message: "O campo color é obrigatório!" });
-            }
-            if (!size) {
-                res.status(500).json({ message: "O campo size é obrigatório!" });
-            }
+            return true;
+        }
 
-            try {
-                const product = await appDataSource.getRepository(Product).save({
-                    title,
-                    price,
-                    color,
-                    size
-                })
-                return res.status(200).json(product);
-            } catch (error) {
-                console.log(error, 'erro ao salvar produtos');
-                return res.status(500).json(error);
-            }
+        // Verifica se cada campo está preenchido
+        if (
+            !verificarCampoObrigatorio(title, "title") ||
+            !verificarCampoObrigatorio(price, "price") ||
+            !verificarCampoObrigatorio(color, "color") ||
+            !verificarCampoObrigatorio(size, "size")
+        ) {
+            return;
+        }
+
+        // Tenta salvar no banco
+        try {
+            const product = await appDataSource.getRepository(Product).save({
+                title,
+                price,
+                color,
+                size
+            })
+            return res.status(200).json({message: "Produto criado com sucesso!", produto: product});
+        } catch (error) {
+            console.log(error, 'erro ao salvar produtos');
+            return res.status(500).json(error);
         }
     }
 
@@ -59,21 +64,59 @@ class ProductController {
 
     }
 
+    // Atualizar produtos
+    async atualizarProdutos(req: Request, res: Response) {
+        const product_id = req.params.product_id;
+        try {
+            const produto = await appDataSource.getRepository(Product).findOne({
+                where: { id: parseInt(product_id) }
+            });
+    
+            if (!produto) {
+                return res.status(404).json({ ok: false, message: "Não existe um produto com este ID" })
+            }
+    
+            if (req.body.title) {
+                produto.title = req.body.title;
+            }
+            if (req.body.price) {
+                produto.price = req.body.price;
+            }
+            if (req.body.color) {
+                produto.color = req.body.color;
+            }
+            if (req.body.name) {
+                produto.size = req.body.size;
+            }
+    
+            await appDataSource.getRepository(Product).save(produto);
+    
+            return res.status(201).json({ ok: true, message: "Produto atualizado com sucesso" });
+    
+        } catch (error) {
+            console.log(error, "Erro ao atualizar produto")
+            return res
+                .status(500)
+                .json({ ok: true, message: "Erro ao atualizar produto" });
+        }
+    }
+
     // Deleta produtos
     async deleteProduct(req: Request, res: Response) {
         const productId = req.params.product_id;
-        
+
         try {
             const produto = await appDataSource.getRepository(Product).findOne({
-                where: {id: parseInt(productId)}
+                where: { id: parseInt(productId) }
             })
 
             if (!produto) {
-                return res.status(500).json({
-                    message: "Produto não existe"
-                })
+                return res.status(404).json({
+                    message: "Produto não encontrado"
+                });
             }
-            await appDataSource.getRepository(Product).delete(produto);
+            await appDataSource.getRepository(Product).delete(productId);
+            // await appDataSource.getRepository(Product).delete(produto);
 
             return res.status(200).json({
                 message: "Produto excluído com sucesso",

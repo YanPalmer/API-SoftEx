@@ -1,5 +1,3 @@
-// import { Request, Response } from "express";
-
 import { atualizarUsuario, cadastrarUsuario, deletarUsuario, listarUsuarios } from "./controlers/user";
 import ProductController from "./controlers/product";
 
@@ -25,6 +23,7 @@ app.delete("/users/:user_id", deletarUsuario);
 // Rotas produto
 app.post("/product", ProductController.createProduct);
 app.get("/product", ProductController.listProducts);
+app.patch("/product/:product_id", ProductController.atualizarProdutos);
 app.delete("/product/:product_id", ProductController.deleteProduct);
 
 export default app;
