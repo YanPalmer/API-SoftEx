@@ -11,7 +11,7 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     // if (!req.body.cpf) {
     //     return res.status(400).send({ok: false, message: "O cpf é obrigatório"});
     // }
-    console.log(req.body, "Este é o corpo da requisição");
+    // console.log(req.body, "Este é o corpo da requisição");
 
     try {
         const user = new User();
@@ -20,9 +20,14 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
         user.password = req.body.password;
         user.cpf = req.body.cpf;
         // Salva no banco de dados o usuário
+        // console.log(user);
         await appDataSource.getRepository(User).save(user);
 
-        return res.status(201).json({ ok: true, message: user });
+        return res.status(201).json({
+            ok: true,
+            message: user,
+            body: req.body
+        });
 
     } catch (error) {
         console.log(error, "Erro ao cadastrar usuário");
@@ -91,17 +96,17 @@ export const deletarUsuario = async (req: Request, res: Response) => {
         })
 
         if (!user) {
-            return res.status(404).json({ok: false, message: "Não existe usuário com esse ID"});
+            return res.status(404).json({ ok: false, message: "Não existe usuário com esse ID" });
         }
 
         await appDataSource.getRepository(User).delete(user);
 
-        return res.status(200).json({ok: true, message: "Usuário excluido com sucesso", usuárioExcluido: user});
+        return res.status(200).json({ ok: true, message: "Usuário excluido com sucesso", usuárioExcluido: user });
     } catch (error) {
         console.log(error, "Erro ao deletar usuário");
         return res
-        .status(500)
-        .json({ok: false, message: "Erro ao deletar usuário"});
+            .status(500)
+            .json({ ok: false, message: "Erro ao deletar usuário" });
     }
 }
 
